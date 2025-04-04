@@ -105,6 +105,28 @@ class Task {
     return null;
   }
 
+  // タスク文字列の検証
+  static String? validateTaskString(String taskStr) {
+    final parts = taskStr.split('::');
+    
+    if (parts.isEmpty) return "不正なタスク形式です";
+    
+    final namespace = parts[0].toLowerCase();
+    
+    if (namespace == 'reminder') {
+      if (parts.length < 3) {
+        return "reminder:: の後に日付を指定してください (例: reminder::20240101::メモ)";
+      }
+    } 
+    else if (namespace == 'calendar') {
+      if (parts.length < 3) {
+        return "calendar:: の後に日付を指定してください (例: calendar::20240101::予定)";
+      }
+    }
+    
+    return null; // エラーなし
+  }
+
   // フォーマットされた日付を取得 (YYYY/MM/DD)
   String? get formattedDate {
     if (date == null || date!.length != 8) return null;

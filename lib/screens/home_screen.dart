@@ -85,7 +85,7 @@ class HomeScreenState extends State<HomeScreen> {
               children: [
                 // 左側のサイドバー
                 Expanded(
-                  flex: 1,
+                  flex:1,
                   child: _buildSidebar(),
                 ),
                 // 右側の入力エリア
@@ -225,6 +225,17 @@ class HomeScreenState extends State<HomeScreen> {
   void _processTasks(List<String> taskStrings) {
     for (final taskStr in taskStrings) {
       if (taskStr.trim().isNotEmpty) {
+        // バリデーションを実行
+        final errorMessage = Task.validateTaskString(taskStr);
+        if (errorMessage != null) {
+          // エラーがあればSnackBarで表示
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(errorMessage), duration: const Duration(seconds: 3)),
+          );
+          continue; // このタスク文字列はスキップして次へ
+        }
+        
+        // バリデーションが通った場合のみタスクを作成
         final task = Task.fromString(taskStr);
         if (task != null) {
           _addTask(task);
